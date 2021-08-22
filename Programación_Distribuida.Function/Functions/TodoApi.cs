@@ -168,6 +168,42 @@ namespace Programación_Distribuida.Function.Functions
             });
         }
 
+        [FunctionName(nameof(DeleteTodo))]
+        public static async Task<IActionResult> DeleteTodo(
+           [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "todo/{id}")] HttpRequest req,
+           [Table("todo", "TODO", "{id}", Connection = "AzureWebJobsStorage")] TodoEntity todoEntity,
+            [Table("todo", Connection = "AzureWebJobsStorage")] CloudTable todoTable,
+
+           string id,
+           ILogger log)
+        {
+            log.LogInformation($"Delete todo: {id}, received.");
+
+
+            if (todoEntity == null)
+            {
+                return new BadRequestObjectResult(new Response
+                {
+                    IsSucces = false,
+                    Message = "Todo not found."
+                });
+            }
+
+
+            await todoTable.ExecuteAsync(TableOperation.Delete(todoEntity));
+            string message = $"Todo: {todoEntity.RowKey}, delete.";
+            log.LogInformation(message);
+
+
+
+            return new OkObjectResult(new Response
+            {
+                IsSucces = true,
+                Message = message,
+                Result = todoEntity
+            });
+        }
+
 
 
     }
