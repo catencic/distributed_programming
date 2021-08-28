@@ -50,7 +50,7 @@ namespace Programación_Distribuida.Function.Functions
 
             TableOperation addOperation = TableOperation.Insert(todoEntity);
             await todoTable.ExecuteAsync(addOperation);
-
+            //
             string message = "New todo stored in table";
             log.LogInformation(message);
 
@@ -139,7 +139,7 @@ namespace Programación_Distribuida.Function.Functions
         [FunctionName(nameof(GetTodoById))]
         public static IActionResult GetTodoById(
            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "todo/{id}")] HttpRequest req,
-           [Table("todo","TODO","{id}", Connection = "AzureWebJobsStorage")] TodoEntity todoEntity,
+           [Table("todo", "TODO", "{id}", Connection = "AzureWebJobsStorage")] TodoEntity todoEntity,
            string id,
            ILogger log)
         {
